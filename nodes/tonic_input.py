@@ -9,7 +9,7 @@ class TonicInput(node.Node):
         self.output_low = output_min
 
     def calculate_output(self):
-        self.output = [self.output_high] * self.steps
+        self.output.append([self.output_high] * self.steps)
 
     def execute(self):
         self.calculate_output()

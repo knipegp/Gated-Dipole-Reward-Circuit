@@ -7,7 +7,7 @@ class Node(abc.ABC):
         self.time_step = time_step
         self.steps = steps
 
-        self.output = [0] * self.steps
+        self.output = list()
 
     @abc.abstractmethod
     def calculate_output(self):

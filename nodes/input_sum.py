@@ -11,7 +11,7 @@ class InputSum(node.Node):
 
     def calculate_output(self):
         # Element-wise addition of the input lists.
-        self.output = list(map(operator.add, self.i_input, self.j_input))
+        self.output.append(list(map(operator.add, self.i_input, self.j_input)))
 
     def execute(self, i_input, j_input=list()):
         # Determine the S_input to the gate depending on whether a phasic input is being applied to the gate.
