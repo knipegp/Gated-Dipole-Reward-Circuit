@@ -16,15 +16,13 @@ class ModulatedPhasicInput(phasic_input.PhasicInput):
     def execute(self, rectify_output_input):
         assert len(rectify_output_input) == self.steps, \
             "Length of input and output lists must be consistent."
-        self.output_max = self.output_max - self.min_reduction
-        self.output_min = self.output_min - self.min_reduction
+        # self.output_max = self.output_max - self.min_reduction
 
         self.calculate_output(self.decision(rectify_output_input))
 
     def decision(self, rectify_output_input):
-        if sum(rectify_output_input) > 1:
+        if sum(rectify_output_input) > 0:
             self.phasic_probability = self.phasic_probability + .5/20
-        print(self.phasic_probability)
         if random.randint(1, 101) < 100*self.phasic_probability + 1:
             return True
         else:
