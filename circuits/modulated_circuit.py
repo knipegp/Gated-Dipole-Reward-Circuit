@@ -1,8 +1,12 @@
+from matplotlib import pyplot as plt
+
 import circuit
 
 import tonic_input
 import modulated_phasic_input
 import input_sum
+import modulated_input_sum
+import gate
 import modulated_gate
 import output
 import rectify_output
@@ -48,34 +52,51 @@ class ModulatedCircuit(circuit.Circuit):
                                                                         output_min=self.phasic_min,
                                                                         time_step=self.time_step,
                                                                         steps=self.steps)
-        self.x1 = input_sum.InputSum(time_step=self.time_step, steps=self.steps)
-        self.x2 = input_sum.InputSum(time_step=self.time_step, steps=self.steps)
+        self.x1 = modulated_input_sum.ModulatedInputSum(min_reduction=1/10, time_step=self.time_step, steps=self.steps)
+        self.x2 = modulated_input_sum.ModulatedInputSum(add=True, min_reduction=1/10, time_step=self.time_step, steps=self.steps)
         self.z1 = modulated_gate.ModulatedGate(a_rate=self.a_rate,
                                                b_max_level=self.b_max_level,
                                                time_step=self.time_step,
                                                steps=self.steps,
                                                b_reduction_rate=self.b_reduction_rate)
-        self.z2 = modulated_gate.ModulatedGate(a_rate=self.a_rate,
-                                               b_max_level=self.b_max_level,
-                                               time_step=self.time_step,
-                                               steps=self.steps,
-                                               b_reduction_rate=self.b_reduction_rate)
+        self.z2 = gate.Gate(a_rate=self.a_rate,
+                            b_max_level=self.b_max_level,
+                            time_step=self.time_step,
+                            steps=self.steps)
         self.x3 = output.Output(time_step=self.time_step, steps=self.steps)
         self.x4 = output.Output(time_step=self.time_step, steps=self.steps)
         self.x5 = rectify_output.RectifyOutput(time_step=self.time_step, steps=self.steps)
         self.x6 = rectify_output.RectifyOutput(time_step=self.time_step, steps=self.steps)
 
     def execute(self, runs=1):
-        for run_idx in range(1, runs+1):
+        for run_idx in range(self.runs, runs+self.runs):
+            self.runs = self.runs + 1
             # The inputs to the execute methods represent the physical connections between nodes.
             self.tonic_input.execute()
-            self.phasic_input.execute(self.x5.output[run_idx-1])
+            self.phasic_input.execute(rectify_output_input=self.x5.output[run_idx-1])
             self.x1.execute(i_input=self.tonic_input.output[run_idx],
-                            j_input=self.phasic_input.output[run_idx])
-            self.x2.execute(i_input=self.tonic_input.output[run_idx])
+                            j_input=self.phasic_input.output[run_idx],
+                            rectify_output_input=self.x6.output[run_idx-1])
+            self.x2.execute(i_input=self.tonic_input.output[run_idx], rectify_output_input=self.x6.output[run_idx-1])
             self.z1.execute(s_input=self.x1.output[run_idx], rectify_output_input=self.x5.output[run_idx-1])
-            self.z2.execute(s_input=self.x2.output[run_idx], rectify_output_input=self.x6.output[run_idx-1])
+            self.z2.execute(s_input=self.x2.output[run_idx])
             self.x3.execute(s_input=self.x1.output[run_idx], gate_input=self.z1.output[run_idx])
             self.x4.execute(s_input=self.x2.output[run_idx], gate_input=self.z2.output[run_idx])
             self.x5.execute(child_output=self.x3.output[run_idx], opponent_output=self.x4.output[run_idx])
             self.x6.execute(child_output=self.x4.output[run_idx], opponent_output=self.x3.output[run_idx])
+
+    def plot_uses(self):
+        uses = list()
+
+        for idx in range(1, len(self.phasic_input.output)):
+            if max(self.phasic_input.output[idx]) != min(self.phasic_input.output[idx]):
+                uses.append(idx)
+            else:
+                pass
+
+        plt.Figure()
+        plt.hist(uses, bins=5)
+        plt.title('Phasic Input Application Histogram')
+        plt.ylabel('Phasic Input Applications')
+        plt.xlabel('Iteration Bin')
+        plt.show()

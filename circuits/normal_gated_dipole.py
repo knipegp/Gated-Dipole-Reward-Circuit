@@ -56,7 +56,8 @@ class NormalGatedDipole(circuit.Circuit):
         self.x6 = rectify_output.RectifyOutput(time_step=self.time_step, steps=self.steps)
 
     def execute(self, runs=1):
-        for run_idx in range(runs):
+        for run_idx in range(self.runs, runs+self.runs):
+            self.runs = self.runs + 1
             # The inputs to the execute methods represent the physical connections between nodes.
             self.tonic_input.execute()
             self.phasic_input.execute()

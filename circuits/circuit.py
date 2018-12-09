@@ -70,25 +70,33 @@ class Circuit(abc.ABC):
                 else:
                     break
 
-            print(idx)
-
-            axs[4, 0].plot(self.phasic_input.output[idx], label=['run: ', str(idx)])
-            axs[4, 1].plot(self.tonic_input.output[idx], label=['run: ', str(idx)])
-            axs[3, 0].plot(self.x1.output[idx], label=['run: ', str(idx)])
-            axs[3, 1].plot(self.x2.output[idx], label=['run: ', str(idx)])
-            axs[2, 0].plot(self.z1.output[idx], label=['run: ', str(idx)])
-            axs[2, 1].plot(self.z2.output[idx], label=['run: ', str(idx)])
-            axs[1, 0].plot(self.x3.output[idx], label=['run: ', str(idx)])
-            axs[1, 1].plot(self.x4.output[idx], label=['run: ', str(idx)])
-            axs[0, 0].plot(self.x5.output[idx], label=['run: ', str(idx)])
-            axs[0, 1].plot(self.x6.output[idx], label=['run: ', str(idx)])
+            axs[4, 0].plot(self.phasic_input.output[idx], label='run: {}'.format(str(idx)))
+            axs[4, 0].set_title('Phasic Input')
+            axs[4, 1].plot(self.tonic_input.output[idx], label='run: {}'.format(str(idx)))
+            axs[4, 1].set_title('Tonic Input')
+            axs[3, 0].plot(self.x1.output[idx], label='run: {}'.format(str(idx)))
+            axs[3, 0].set_title('X1')
+            axs[3, 1].plot(self.x2.output[idx], label='run: {}'.format(str(idx)))
+            axs[3, 1].set_title('X2')
+            axs[2, 0].plot(self.z1.output[idx], label='run: {}'.format(str(idx)))
+            axs[2, 0].set_title('Z1')
+            axs[2, 1].plot(self.z2.output[idx], label='run: {}'.format(str(idx)))
+            axs[2, 1].set_title('Z2')
+            axs[1, 0].plot(self.x3.output[idx], label='run: {}'.format(str(idx)))
+            axs[1, 0].set_title('X3')
+            axs[1, 1].plot(self.x4.output[idx], label='run: {}'.format(str(idx)))
+            axs[1, 1].set_title('X4')
+            axs[0, 0].plot(self.x5.output[idx], label='run: {}'.format(str(idx)))
+            axs[0, 0].set_title('X5')
+            axs[0, 1].plot(self.x6.output[idx], label='run: {}'.format(str(idx)))
+            axs[0, 1].set_title('X6')
 
         plt.legend(loc=0)
         plt.show()
 
     def run_index_generator(self, run_index):
         if run_index >= len(self.phasic_input.output)-1:
-            for idx in range(len(self.phasic_input.output)-1, 1, -1):
+            for idx in range(len(self.phasic_input.output)-1, 0, -1):
                 yield idx
         else:
             for idx in range(run_index, len(self.phasic_input.output)-1):
