@@ -18,7 +18,6 @@ class PhasicInput(node.Node):
         else:
             step_list = self.output_min
 
-
         steps_high = math.floor(self.steps * self.duty_cycle)
         steps_low = self.steps - steps_high
 
