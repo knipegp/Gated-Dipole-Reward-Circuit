@@ -1,5 +1,4 @@
-from matplotlib import pyplot as plt
-
+import circuit
 import tonic_input
 import phasic_input
 import input_sum
@@ -8,7 +7,7 @@ import output
 import rectify_output
 
 
-class NormalGatedDipole:
+class NormalGatedDipole(circuit.Circuit):
 
     def __init__(self,
                  a_rate=5,
@@ -20,18 +19,17 @@ class NormalGatedDipole:
                  phasic_duty_cycle=.5,
                  phasic_max=10,
                  phasic_min=0):
+        super(NormalGatedDipole, self).__init__(a_rate=a_rate,
+                                                b_max_level=b_max_level,
+                                                time_step=time_step,
+                                                steps=steps,
+                                                tonic_max=tonic_max,
+                                                tonic_min=tonic_min,
+                                                phasic_duty_cycle=phasic_duty_cycle,
+                                                phasic_max=phasic_max,
+                                                phasic_min=phasic_min)
 
-        # Init constants to be used as parameters for the different nodes and the control of the circuit.
-        self.a_rate = a_rate
-        self.b_max_level = b_max_level
-        self.time_step = time_step
-        self.steps = steps
-        self.tonic_max = tonic_max
-        self.tonic_min = tonic_min
-        self.phasic_duty_cycle = phasic_duty_cycle
-        self.phasic_max = phasic_max
-        self.phasic_min = phasic_min
-
+    def init_nodes(self):
         # Init the nodes of a Gated Dipole Circuit
         self.tonic_input = tonic_input.TonicInput(output_max=self.tonic_max,
                                                   output_min=self.tonic_min,
@@ -59,31 +57,15 @@ class NormalGatedDipole:
 
     def execute(self, runs=1):
         for run_idx in range(runs):
-            for step_idx in range(self.steps):
-
-                # The inputs to the execute methods represent the physical connections between nodes.
-                self.tonic_input.execute()
-                self.phasic_input.execute()
-                self.x1.execute(i_input=self.tonic_input.output[run_idx],
-                                j_input=self.phasic_input.output[run_idx])
-                self.x2.execute(i_input=self.tonic_input.output[run_idx])
-                self.z1.execute(s_input=self.x1.output[run_idx])
-                self.z2.execute(s_input=self.x2.output[run_idx])
-                self.x3.execute(s_input=self.x1.output[run_idx], gate_input=self.z1.output[run_idx])
-                self.x4.execute(s_input=self.x2.output[run_idx], gate_input=self.z2.output[run_idx])
-                self.x5.execute(child_output=self.x3.output[run_idx], opponent_output=self.x4.output[run_idx])
-                self.x6.execute(child_output=self.x4.output[run_idx], opponent_output=self.x3.output[run_idx])
-
-    def plot(self, run_index=0):
-        fig, axs = plt.subplots(5, 2, constrained_layout=True)
-        axs[4, 0].plot(self.tonic_input.output[run_index])
-        axs[4, 1].plot(self.tonic_input.output[run_index])
-        axs[3, 0].plot(self.x1.output[run_index])
-        axs[3, 1].plot(self.x2.output[run_index])
-        axs[2, 0].plot(self.z1.output[run_index])
-        axs[2, 1].plot(self.z2.output[run_index])
-        axs[1, 0].plot(self.x3.output[run_index])
-        axs[1, 1].plot(self.x4.output[run_index])
-        axs[0, 0].plot(self.x5.output[run_index])
-        axs[0, 1].plot(self.x6.output[run_index])
-        plt.show()
+            # The inputs to the execute methods represent the physical connections between nodes.
+            self.tonic_input.execute()
+            self.phasic_input.execute()
+            self.x1.execute(i_input=self.tonic_input.output[run_idx],
+                            j_input=self.phasic_input.output[run_idx])
+            self.x2.execute(i_input=self.tonic_input.output[run_idx])
+            self.z1.execute(s_input=self.x1.output[run_idx])
+            self.z2.execute(s_input=self.x2.output[run_idx])
+            self.x3.execute(s_input=self.x1.output[run_idx], gate_input=self.z1.output[run_idx])
+            self.x4.execute(s_input=self.x2.output[run_idx], gate_input=self.z2.output[run_idx])
+            self.x5.execute(child_output=self.x3.output[run_idx], opponent_output=self.x4.output[run_idx])
+            self.x6.execute(child_output=self.x4.output[run_idx], opponent_output=self.x3.output[run_idx])

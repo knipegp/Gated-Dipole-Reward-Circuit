@@ -1,5 +1,4 @@
 import node
-import operator
 
 
 class Gate(node.Node):

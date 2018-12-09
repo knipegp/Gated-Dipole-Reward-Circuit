@@ -8,6 +8,7 @@ class Node(abc.ABC):
         self.steps = steps
 
         self.output = list()
+        self.output.append([0] * steps)
 
     @abc.abstractmethod
     def calculate_output(self):

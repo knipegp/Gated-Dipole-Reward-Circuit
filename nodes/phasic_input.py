@@ -12,12 +12,18 @@ class PhasicInput(node.Node):
         self.output_min = output_min
         self.duty_cycle = duty_cycle
 
-    def calculate_output(self):
+    def calculate_output(self, step_magnitude=False):
+        if not step_magnitude:
+            step_list = self.output_max
+        else:
+            step_list = self.output_min
+
+
         steps_high = math.floor(self.steps * self.duty_cycle)
         steps_low = self.steps - steps_high
 
         self.output.append([self.output_min]*(steps_low//2)
-                      + [self.output_max]*steps_high
+                      + [step_list]*steps_high
                       + [self.output_min]*(1000-steps_low//2-steps_high))
 
     def execute(self):
