@@ -1,4 +1,4 @@
-import node
+from nodes import node
 
 
 class TonicInput(node.Node):

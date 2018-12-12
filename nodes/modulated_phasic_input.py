@@ -1,5 +1,5 @@
-import phasic_input
 import random
+from nodes import phasic_input
 
 
 class ModulatedPhasicInput(phasic_input.PhasicInput):

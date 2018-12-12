@@ -1,15 +1,7 @@
 from matplotlib import pyplot as plt
 
-import circuit
-
-import tonic_input
-import modulated_phasic_input
-import input_sum
-import modulated_input_sum
-import gate
-import modulated_gate
-import output
-import rectify_output
+from circuits import circuit
+from nodes import tonic_input, modulated_phasic_input, modulated_input_sum, gate, modulated_gate, output, rectify_output
 
 
 class ModulatedCircuit(circuit.Circuit):

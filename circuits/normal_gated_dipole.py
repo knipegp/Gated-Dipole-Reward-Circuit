@@ -1,10 +1,5 @@
-import circuit
-import tonic_input
-import phasic_input
-import input_sum
-import gate
-import output
-import rectify_output
+from circuits import circuit
+from nodes import tonic_input, phasic_input, input_sum, gate, output, rectify_output
 
 
 class NormalGatedDipole(circuit.Circuit):

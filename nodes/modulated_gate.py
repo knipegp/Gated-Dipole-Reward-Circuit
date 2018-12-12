@@ -1,4 +1,4 @@
-import gate
+from nodes import gate
 
 
 class ModulatedGate(gate.Gate):

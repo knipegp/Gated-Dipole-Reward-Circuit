@@ -1,6 +1,6 @@
-import normal_gated_dipole
-import modulated_circuit
 from matplotlib import pyplot as plt
+
+from circuits import normal_gated_dipole, modulated_circuit
 
 
 def main():

@@ -1,4 +1,4 @@
-import node
+from nodes import node
 import math
 
 

@@ -1,5 +1,5 @@
-import node
 import operator
+from nodes import node
 
 
 class InputSum(node.Node):

@@ -1,5 +1,5 @@
-import input_sum
 import operator
+from nodes import input_sum
 
 
 class ModulatedInputSum(input_sum.InputSum):
